@@ -6,7 +6,6 @@ metadata:
       app  : site
       owner: Alex
 spec:
-  replicas: 3
   selector:
     matchLabels:
       project: server_web
@@ -42,4 +41,22 @@ spec:
      - type: Resource
        resource: 
           name: memory
-          targetAverageUtilization: 70    
+          targetAverageUtilization: 70  
+
+---
+# service loadbalancer
+apiVersion : v1
+kind       : Service
+metadata:
+  name: autoscaler-service
+  labels:
+     owner: Alex
+spec:
+   selector:
+      project: server_web
+   ports:
+     - name       : app-listener
+       protocol   : TCP
+       port       : 80 #for loadbalancer 
+       targetPort : 80 # port on pod
+   type: LoadBalancer
