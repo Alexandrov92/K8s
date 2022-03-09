@@ -2,8 +2,10 @@
 Some configuration files for practical work with Kubernetes
 
 Запустить:
-kubectl apply -f  *.yml
+
+$kubectl apply -f  *.yaml
 
 Свернуть все ресурсы, которые прописаны в файле:
-kubectl delete -f  *.yml
+
+$kubectl delete -f  *.yaml
 
