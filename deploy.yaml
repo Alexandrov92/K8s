@@ -1,0 +1,62 @@
+apiVersion : apps/v1
+kind       : Deployment
+metadata:
+   name: apache-deploy
+   labels:
+      app  : site
+      owner: Alex
+spec:
+  selector:
+    matchLabels:
+      project: server_web
+  template:
+     metadata:
+        labels :
+          project : server_web
+          owner   : Alex
+     spec:
+        containers:
+           - name  : server_web-apache
+             image : httpd-latest
+             ports:
+               - containerPort: 80
+---
+#hpa
+apiVersion : autoscaling/v2
+kind       : HorizontalPodAutoscaler
+metadata:
+  name: autoscaler
+spec:
+   scaleTargetRef:
+     apiVersion : apps/v2beta1v1
+     kind       : Deployment
+     name       : apache-deploy
+   minReplicas: 3
+   maxReplicas: 6
+   metrics:
+     - type: Resource
+       resource:
+          name: cpu
+          targetAverageUtilization: 90
+     - type: Resource
+       resource: 
+          name: memory
+          targetAverageUtilization: 70  
+
+---
+# service loadbalancer
+apiVersion : v1
+kind       : Service
+metadata:
+  name: autoscaler-service
+  labels:
+     owner: Alex
+spec:
+   selector:
+      project: server_web
+   ports:
+     - name       : app-listener
+       protocol   : TCP
+       port       : 80 #for loadbalancer 
+       targetPort : 80 # port on pod
+   type: LoadBalancer
