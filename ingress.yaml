@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hosts
+spec:
+ rules:
+ - hosts: 
+   http:
+     paths:
+       - backend:
+           serviceName: my_service_clusterIP
+           servicePort: 80
+            
+ #- hosts:
+ #  http:
+ #    paths:
+ #      - backend:
+ #          serviceName: my_service2_clusterIP
+ #          servicePort: 8080
