@@ -1,0 +1,44 @@
+apiVersion : apps/v1
+kind       : Deployment
+metadata:
+   name: {{ .Release.Name }}-deploy #.Release.Name - стандартная переменная helm
+   labels:
+      app  : {{ .Release.Name }}-site
+      owner: Alex
+spec:
+  selector:
+    matchLabels:
+      project: {{ .Release.Name }}
+  template:
+     metadata:
+        labels :
+          project : {{ .Release.Name }}
+          owner   : Alex
+     spec:
+        containers:
+           - name  : server_web-{{ .Release.Name }}
+             image : {{ .Values.image }}
+             ports:
+               - containerPort: 80
+---
+#hpa
+apiVersion : autoscaling/v2
+kind       : HorizontalPodAutoscaler
+metadata:
+  name: autoscaler
+spec:
+   scaleTargetRef:
+     apiVersion : apps/v2beta1v1
+     kind       : Deployment
+     name       : {{ .Release.Name }}-deploy
+   minReplicas: 3
+   maxReplicas: 6
+   metrics:
+     - type: Resource
+       resource:
+          name: cpu
+          targetAverageUtilization: 90
+     - type: Resource
+       resource:
+          name: memory
+          targetAverageUtilization: 70

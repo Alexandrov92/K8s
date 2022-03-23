@@ -1,0 +1,11 @@
+apiVersion : v2
+neme       : helm-templ
+description: Basic helm-chart k8s example
+version    : 
+type       : application
+appVersion : "0.0.1"
+keywords:
+     - apache
+maintainers:
+     - name : Alex
+     
