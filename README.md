@@ -9,3 +9,5 @@ $kubectl apply -f  *.yaml
 
 $kubectl delete -f  *.yaml
 
+HELM
+$helm install app .*/
